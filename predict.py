@@ -1,6 +1,7 @@
 import re
 from typing import Optional
 
+import torch
 from cog import BasePredictor, BaseModel, Input
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -16,9 +17,8 @@ class Predictor(BasePredictor):
         self.tokenizer = AutoTokenizer.from_pretrained("./weights")
         self.model = AutoModelForCausalLM.from_pretrained(
             "./weights",
-            torch_dtype="auto",
-            device_map="auto",
-        )
+            torch_dtype=torch.float16,
+        ).to("cuda")
 
     def predict(
         self,
