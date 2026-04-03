@@ -27,6 +27,10 @@ class Predictor(BasePredictor):
             description="Assistant response to moderate (enables response moderation)",
             default=None,
         ),
+        system_prompt: Optional[str] = Input(
+            description="Optional system prompt to prepend to the conversation",
+            default=None,
+        ),
         max_new_tokens: int = Input(
             description="Maximum number of tokens to generate",
             ge=1,
@@ -34,7 +38,10 @@ class Predictor(BasePredictor):
             default=128,
         ),
     ) -> ModerationOutput:
-        messages = [{"role": "user", "content": prompt}]
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": prompt})
         if response is not None:
             messages.append({"role": "assistant", "content": response})
 
