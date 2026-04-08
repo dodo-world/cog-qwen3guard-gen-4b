@@ -49,7 +49,12 @@ class Predictor(BasePredictor):
         ),
     ) -> ModerationOutput:
         if messages:
-            chat = json.loads(messages)
+            try:
+                chat = json.loads(messages)
+            except json.JSONDecodeError as e:
+                raise ValueError(f"messages must be valid JSON: {e}") from e
+            if not isinstance(chat, list):
+                raise ValueError("messages must be a JSON array")
             if system_prompt and (not chat or chat[0].get("role") != "system"):
                 chat.insert(0, {"role": "system", "content": system_prompt})
         else:
