@@ -6,4 +6,5 @@ build:
   python_version: "3.12"
   python_requirements: requirements.txt
 
+image: "r8.im/ditto--ai/qwen3guard-gen-4b"
 predict: "predict.py:Predictor"

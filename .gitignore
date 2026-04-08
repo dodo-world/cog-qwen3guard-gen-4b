@@ -1,0 +1,17 @@
+# Cog
+.cog/
+
+# Python
+__pycache__/
+*.pyc
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.python-version
+venv/
+
+# Model weights
+weights/
+
+# Node (Replicate app)
+my-replicate-app/
