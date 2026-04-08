@@ -1,3 +1,4 @@
+import json
 import re
 from typing import Optional
 
@@ -22,13 +23,22 @@ class Predictor(BasePredictor):
 
     def predict(
         self,
-        prompt: str = Input(description="User message to moderate"),
+        prompt: str = Input(
+            description="User message to moderate (ignored when messages is provided)",
+            default="",
+        ),
         response: Optional[str] = Input(
-            description="Assistant response to moderate (enables response moderation)",
+            description="Assistant response to moderate (ignored when messages is provided)",
             default=None,
         ),
         system_prompt: Optional[str] = Input(
             description="Optional system prompt to prepend to the conversation",
+            default=None,
+        ),
+        messages: Optional[str] = Input(
+            description="Optional JSON array of chat messages [{role, content}, ...]. "
+            "When provided, used directly instead of prompt/response fields. "
+            "Supports 'system', 'user', and 'assistant' roles.",
             default=None,
         ),
         max_new_tokens: int = Input(
@@ -38,15 +48,25 @@ class Predictor(BasePredictor):
             default=128,
         ),
     ) -> ModerationOutput:
-        messages = []
-        if system_prompt:
-            messages.append({"role": "system", "content": system_prompt})
-        messages.append({"role": "user", "content": prompt})
-        if response is not None:
-            messages.append({"role": "assistant", "content": response})
+        if messages:
+            try:
+                chat = json.loads(messages)
+            except json.JSONDecodeError as e:
+                raise ValueError(f"messages must be valid JSON: {e}") from e
+            if not isinstance(chat, list):
+                raise ValueError("messages must be a JSON array")
+            if system_prompt and (not chat or chat[0].get("role") != "system"):
+                chat.insert(0, {"role": "system", "content": system_prompt})
+        else:
+            chat = []
+            if system_prompt:
+                chat.append({"role": "system", "content": system_prompt})
+            chat.append({"role": "user", "content": prompt})
+            if response is not None:
+                chat.append({"role": "assistant", "content": response})
 
         text = self.tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True
+            chat, tokenize=False, add_generation_prompt=True
         )
         inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
 
