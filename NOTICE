@@ -1,0 +1,39 @@
+cog-qwen3guard-gen-4b
+Copyright 2026 Popcorn AI, Inc.
+
+This product includes the following third-party components:
+
+Model: Qwen/Qwen3Guard-Gen-4B
+Source: https://huggingface.co/Qwen/Qwen3Guard-Gen-4B
+License: Apache-2.0
+Copyright 2024 Alibaba Cloud
+
+cog
+Source: https://github.com/replicate/cog
+License: Apache-2.0
+Copyright Replicate, Inc.
+
+torch
+Source: https://pytorch.org/
+License: BSD-3-Clause
+Copyright Meta Platforms, Inc.
+
+transformers
+Source: https://github.com/huggingface/transformers
+License: Apache-2.0
+Copyright Hugging Face, Inc.
+
+accelerate
+Source: https://github.com/huggingface/accelerate
+License: Apache-2.0
+Copyright Hugging Face, Inc.
+
+safetensors
+Source: https://github.com/huggingface/safetensors
+License: Apache-2.0
+Copyright Hugging Face, Inc.
+
+huggingface_hub
+Source: https://github.com/huggingface/huggingface_hub
+License: Apache-2.0
+Copyright Hugging Face, Inc.
